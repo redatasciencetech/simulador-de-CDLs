@@ -158,7 +158,7 @@
       border-radius: 8px;
       cursor: pointer;
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       transition: all 0.2s;
       text-align: left;
     }
@@ -434,8 +434,10 @@
         <button class="close-btn" onclick="toggleSidebar()" title="Fechar Menu">✕</button>
       </div>
 
+      <!-- BOTÕES DE CRIAÇÃO -->
       <div class="btn-group">
-        <button class="btn" onclick="addModule('cdl')">🟦 Nova CDL</button>
+        <button class="btn" onclick="addModule('cdl', 'asc')">🟦 CDL Crescente (128+)</button>
+        <button class="btn" onclick="addModule('cdl', 'desc')">🟦 CDL Decrescente (127-)</button>
         <button class="btn" onclick="addModule('mesa')">🟩 Nova Mesa</button>
         <button class="btn" onclick="addModule('corredor')">🟨 Caixa de Texto</button>
       </div>
@@ -524,7 +526,7 @@
 
       <div class="section-title" style="margin-top: auto;">Opções Gerais</div>
       <button class="btn" onclick="restoreDefaultLayout(); closeSidebarOnMobile();">🔄 Restaurar Modelo Padrão</button>
-      <button class="btn btn-primary" onclick="window.print()">🖨️️ Imprimir Layout</button>
+      <button class="btn btn-primary" onclick="window.print()">🖨 Imprimir Layout</button>
     </sidebar>
 
     <!-- CANVA DA PLANTA -->
@@ -549,24 +551,16 @@
 
     const STORAGE_KEY = 'cdl_simulator_saved_layouts';
 
-    // MODELOS DE EXEMPLO INICIAIS CASO O USUÁRIO NUNCA TENHA SALVO NADA
+    // MODELOS DE EXEMPLO INICIAIS
     const DEFAULT_PRESETS = {
       "Layout Padrão": [
         { type: 'corredor', label: 'Corredor Operacional de Triagem', x: 40, y: 30, w: 720, h: 80, sublabel: '', entry: 'none', bgColor: '#f5edd6', textColor: '#292524' },
-        { type: 'cdl', label: 'CDL 30', x: 40, y: 130, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000000' },
-        { type: 'cdl', label: 'CDL 32', x: 40, y: 220, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000000' },
-        { type: 'mesa', label: 'Mesa 01', x: 140, y: 220, w: 90, h: 80, sublabel: '', entry: 'none', bgColor: '#dcfce7', textColor: '#14532d' }
-      ],
-      "Layout Exemplo - Duplo Corredor": [
-        { type: 'corredor', label: 'Corredor Norte - Entrada', x: 40, y: 30, w: 720, h: 70, sublabel: '', entry: 'none', bgColor: '#f5edd6', textColor: '#292524' },
-        { type: 'cdl', label: 'CDL 01', x: 40, y: 120, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'top', bgColor: '#e0f2fe', textColor: '#000000' },
-        { type: 'cdl', label: 'CDL 02', x: 140, y: 120, w: 90, h: 80, sublabel: 'Manga Média', entry: 'top', bgColor: '#e0f2fe', textColor: '#000000' },
-        { type: 'cdl', label: 'CDL 03', x: 240, y: 120, w: 90, h: 80, sublabel: 'Manga Pequena', entry: 'top', bgColor: '#e0f2fe', textColor: '#000000' },
-        { type: 'corredor', label: 'Corredor Sul - Saída', x: 40, y: 220, w: 720, h: 70, sublabel: '', entry: 'none', bgColor: '#fef3c7', textColor: '#292524' }
+        { type: 'cdl', label: 'CDL 128', x: 40, y: 130, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000000' },
+        { type: 'cdl', label: 'CDL 129', x: 140, y: 130, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000000' },
+        { type: 'mesa', label: 'Mesa 01', x: 240, y: 130, w: 90, h: 80, sublabel: '', entry: 'none', bgColor: '#dcfce7', textColor: '#14532d' }
       ]
     };
 
-    // FUNÇÃO PARA BUSCAR TODOS OS LAYOUTS DO LOCALSTORAGE
     function getSavedLayouts() {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
@@ -580,7 +574,6 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(layoutsObj));
     }
 
-    // CAPTURA A CONFIGURAÇÃO DE TODOS OS MÓDULOS ATUAIS NO CANVAS
     function getCurrentCanvasState() {
       const elements = Array.from(canvas.querySelectorAll('.element'));
       return elements.map(el => ({
@@ -597,7 +590,6 @@
       }));
     }
 
-    // ATUALIZA O DROPDOWN DE SELEÇÃO DE LAYOUTS
     function renderLayoutDropdown(selectedName) {
       const layouts = getSavedLayouts();
       const select = document.getElementById('layoutSelect');
@@ -612,7 +604,6 @@
       });
     }
 
-    // ALTERNA PARA O LAYOUT SELECIONADO
     function switchLayout(layoutName) {
       const layouts = getSavedLayouts();
       if (layouts[layoutName]) {
@@ -628,7 +619,6 @@
       }
     }
 
-    // SALVA O ESTADO ATUAL COM O NOME DIGITADO
     function saveCurrentLayout() {
       const nameInput = document.getElementById('newLayoutName');
       const name = nameInput.value.trim();
@@ -647,7 +637,6 @@
       alert(`Modelo de layout "${name}" salvo com sucesso!`);
     }
 
-    // EXCLUI O LAYOUT QUE ESTÁ SELECIONADO ATUALMENTE
     function deleteCurrentLayout() {
       const select = document.getElementById('layoutSelect');
       const currentName = select.value;
@@ -706,7 +695,6 @@
       }
     }
 
-    // CONVERTE RGB PARA HEX PARA OS COLOR PICKERS
     function rgbToHex(rgbStr) {
       if (!rgbStr || rgbStr.indexOf('rgb') === -1) return rgbStr || '#000000';
       const rgb = rgbStr.match(/\d+/g);
@@ -732,8 +720,8 @@
       updateSelectedElement();
     }
 
-    // ADICIONAR MÓDULO (PADRÃO PARA CDL: 'Manga Grande')
-    function addModule(type) {
+    // ADICIONAR MÓDULO COM LEITURA DINÂMICA DA TELA
+    function addModule(type, mode = 'asc') {
       spawnCounter = (spawnCounter + 1) % 8;
       
       const scrollX = viewport ? viewport.scrollLeft : 0;
@@ -745,9 +733,53 @@
       const w = type === 'corredor' ? 400 : 90;
       const h = type === 'corredor' ? 70 : 80;
 
+      let customLabel = '';
+
+      if (type === 'cdl') {
+        // Mapeia dinamicamente todos os números das CDLs visíveis na tela
+        const activeCdls = Array.from(canvas.querySelectorAll('.type-cdl'))
+          .map(el => {
+            const match = el.dataset.label ? el.dataset.label.match(/\d+/) : null;
+            return match ? parseInt(match[0], 10) : null;
+          })
+          .filter(num => num !== null);
+
+        if (mode === 'asc') {
+          // Filtra números >= 128
+          const ascNums = activeCdls.filter(num => num >= 128);
+          if (ascNums.length > 0) {
+            const maxNum = Math.max(...ascNums);
+            customLabel = `CDL ${maxNum + 1}`;
+          } else {
+            customLabel = `CDL 128`;
+          }
+        } else {
+          // Filtra números <= 127
+          const descNums = activeCdls.filter(num => num <= 127);
+          if (descNums.length > 0) {
+            const minNum = Math.min(...descNums);
+            customLabel = `CDL ${minNum - 1}`;
+          } else {
+            customLabel = `CDL 127`;
+          }
+        }
+      } else if (type === 'mesa') {
+        const activeMesas = Array.from(canvas.querySelectorAll('.type-mesa'))
+          .map(el => {
+            const match = el.dataset.label ? el.dataset.label.match(/\d+/) : null;
+            return match ? parseInt(match[0], 10) : null;
+          })
+          .filter(num => num !== null);
+        
+        const nextMesa = activeMesas.length > 0 ? Math.max(...activeMesas) + 1 : 1;
+        customLabel = `Mesa ${nextMesa < 10 ? '0' + nextMesa : nextMesa}`;
+      } else {
+        customLabel = 'Corredor Operacional de Triagem';
+      }
+
       const defaultSublabel = type === 'cdl' ? 'Manga Grande' : '';
 
-      createElement(type, posX, posY, w, h, '', defaultSublabel, type === 'cdl' ? 'bottom' : 'none', getDefaultHexColor(type), getDefaultTextColor(type));
+      createElement(type, posX, posY, w, h, customLabel, defaultSublabel, type === 'cdl' ? 'bottom' : 'none', getDefaultHexColor(type), getDefaultTextColor(type));
       closeSidebarOnMobile();
     }
 
@@ -767,7 +799,7 @@
       el.style.color = finalTextColor;
 
       el.dataset.type = type;
-      el.dataset.label = label || (type === 'cdl' ? `CDL ${30 + document.querySelectorAll('.type-cdl').length}` : (type === 'mesa' ? `Mesa 0${document.querySelectorAll('.type-mesa').length + 1}` : 'Corredor Operacional de Triagem'));
+      el.dataset.label = label || (type === 'cdl' ? 'CDL 128' : 'Módulo');
       el.dataset.sublabel = sublabel;
       el.dataset.entry = entry;
       el.dataset.bgColor = finalBgColor;
