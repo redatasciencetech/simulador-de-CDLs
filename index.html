@@ -11,7 +11,7 @@
       --gold-light: #eab308;
       --primary: #004080;
       
-      /* Estilos visuais das CDLs e Mesas */
+      /* Cores dos módulos */
       --cdl-bg: #e0f2fe;
       --cdl-border: #3b82f6;
       --cdl-notch: #2563eb;
@@ -76,41 +76,14 @@
       border-radius: 50%;
     }
 
-    .brand-text {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .brand-text .name {
-      font-size: 0.95rem;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      color: #ffffff;
-      line-height: 1;
-    }
-
+    .brand-text { display: flex; flex-direction: column; }
+    .brand-text .name { font-size: 0.95rem; font-weight: 800; letter-spacing: 0.5px; color: #ffffff; line-height: 1; }
     .brand-text .name .gold { color: var(--gold-light); }
-
-    .brand-text .sub {
-      font-size: 0.65rem;
-      letter-spacing: 1px;
-      color: #cbd5e1;
-      margin-top: 2px;
-    }
-
+    .brand-text .sub { font-size: 0.65rem; letter-spacing: 1px; color: #cbd5e1; margin-top: 2px; }
     .brand-text .sub .gold { color: var(--gold-light); }
 
-    .project-info {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .project-title {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #f1f5f9;
-    }
+    .project-info { display: flex; align-items: center; gap: 10px; }
+    .project-title { font-size: 0.85rem; font-weight: 600; color: #f1f5f9; }
 
     .badge {
       background: var(--gold-light);
@@ -136,17 +109,17 @@
       background: var(--primary);
       color: white;
       border: none;
-      padding: 10px 16px;
+      padding: 12px 20px;
       border-radius: 30px;
       font-weight: bold;
-      font-size: 0.85rem;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+      font-size: 0.9rem;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.35);
       cursor: pointer;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
 
-    /* PAINEL LATERAL (DESKTOP & MOBILE DRAWER) */
+    /* PAINEL LATERAL (DRAWER) */
     sidebar {
       width: 300px;
       background: white;
@@ -173,13 +146,13 @@
     .btn-group { display: flex; flex-direction: column; gap: 8px; }
 
     .btn {
-      padding: 10px;
+      padding: 12px;
       border: 1px solid #cbd5e1;
       background: #f8fafc;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
       font-weight: 600;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       transition: all 0.2s;
       text-align: left;
     }
@@ -188,7 +161,7 @@
     .btn-primary:hover { background: #003366; }
     .btn-danger { background: #ef4444; color: white; border: none; text-align: center; }
 
-    /* INSPETOR DE ELEMENTO SELECIONADO */
+    /* INSPETOR DE EDICÃO */
     .inspector {
       background: #f1f5f9;
       border: 1px solid #cbd5e1;
@@ -210,7 +183,7 @@
       background: white;
     }
 
-    /* ÁREA DO CANVAS DA PLANTA */
+    /* CANVAS DA PLANTA */
     .viewport {
       flex: 1;
       overflow: auto;
@@ -224,17 +197,17 @@
     }
 
     #canvas {
-      width: 1600px;
+      width: 1800px;
       height: 1200px;
       position: relative;
     }
 
-    /* ESTILOS DOS ELEMENTOS COM TOUCH-ACTION NONE PARA ARRASTO PERFEITO */
+    /* ESTILOS DOS ELEMENTOS */
     .element {
       position: absolute;
       user-select: none;
       -webkit-user-select: none;
-      touch-action: none; /* Impede rolagem da tela durante o arrasto */
+      touch-action: none;
       cursor: move;
       box-sizing: border-box;
       display: flex;
@@ -247,8 +220,8 @@
     }
 
     .element.selected {
-      outline: 2px solid #2563eb !important;
-      box-shadow: 0 0 12px rgba(37, 99, 235, 0.4);
+      outline: 3px solid #2563eb !important;
+      box-shadow: 0 0 14px rgba(37, 99, 235, 0.5);
       z-index: 50 !important;
     }
 
@@ -258,18 +231,8 @@
       border: 2px solid var(--cdl-border);
       border-radius: 12px;
     }
-    .type-cdl .title {
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: #000000;
-      line-height: 1.1;
-    }
-    .type-cdl .sub {
-      font-size: 0.75rem;
-      color: #64748b;
-      font-family: 'Courier New', Courier, monospace;
-      margin-top: 2px;
-    }
+    .type-cdl .title { font-size: 1.1rem; font-weight: 800; color: #000000; line-height: 1.1; }
+    .type-cdl .sub { font-size: 0.75rem; color: #64748b; font-family: 'Courier New', Courier, monospace; margin-top: 2px; }
 
     /* TIPO MESA */
     .type-mesa {
@@ -280,7 +243,7 @@
       font-size: 0.9rem;
     }
 
-    /* TIPO CORREDOR OPERACIONAL */
+    /* TIPO CORREDOR */
     .type-corredor {
       background: var(--corredor-bg);
       border: 2px dashed var(--corredor-border);
@@ -291,31 +254,14 @@
       z-index: 1;
     }
 
-    /* LISTRA GROSSA DE ENTRADA DO PRODUTO */
-    .notch-bar {
-      position: absolute;
-      background: var(--cdl-notch);
-      z-index: 10;
-    }
+    /* LISTRA GROSSA DE ENTRADA */
+    .notch-bar { position: absolute; background: var(--cdl-notch); z-index: 10; }
+    .notch-bottom { bottom: -4px; left: 50%; transform: translateX(-50%); width: 28px; height: 6px; border-radius: 2px; }
+    .notch-top { top: -4px; left: 50%; transform: translateX(-50%); width: 28px; height: 6px; border-radius: 2px; }
+    .notch-left { left: -4px; top: 50%; transform: translateY(-50%); width: 6px; height: 28px; border-radius: 2px; }
+    .notch-right { right: -4px; top: 50%; transform: translateY(-50%); width: 6px; height: 28px; border-radius: 2px; }
 
-    .notch-bottom {
-      bottom: -4px; left: 50%; transform: translateX(-50%);
-      width: 28px; height: 6px; border-radius: 2px;
-    }
-    .notch-top {
-      top: -4px; left: 50%; transform: translateX(-50%);
-      width: 28px; height: 6px; border-radius: 2px;
-    }
-    .notch-left {
-      left: -4px; top: 50%; transform: translateY(-50%);
-      width: 6px; height: 28px; border-radius: 2px;
-    }
-    .notch-right {
-      right: -4px; top: 50%; transform: translateY(-50%);
-      width: 6px; height: 28px; border-radius: 2px;
-    }
-
-    /* RODAPÉ RESPONSIVO */
+    /* RODAPÉ */
     footer {
       background: #f8fafc;
       border-top: 1px solid #e2e8f0;
@@ -327,31 +273,24 @@
       font-weight: 500;
       z-index: 20;
     }
-
     footer .author { color: #0f172a; font-weight: 700; }
     footer .gold-text { color: var(--gold); font-weight: 800; }
 
-    /* REGRAS CSS EXCLUSIVAS PARA TELAS MENORES (CELULARES) */
+    /* REGRAS PARA CELULAR */
     @media (max-width: 768px) {
       .mobile-menu-btn { display: flex; }
 
       sidebar {
         position: absolute;
         top: 0; left: 0; bottom: 0;
-        width: 280px;
+        width: 290px;
         transform: translateX(-100%);
-        box-shadow: 4px 0 20px rgba(0,0,0,0.25);
+        box-shadow: 4px 0 20px rgba(0,0,0,0.3);
       }
 
-      sidebar.open {
-        transform: translateX(0);
-      }
-
-      .sidebar-overlay.open {
-        display: block;
-      }
-
-      .project-title { display: none; } /* Esconde texto secundário no topo do celular */
+      sidebar.open { transform: translateX(0); }
+      .sidebar-overlay.open { display: block; }
+      .project-title { display: none; }
     }
 
     @media print {
@@ -363,7 +302,7 @@
 </head>
 <body>
 
-  <!-- CABEÇALHO COM A SUA MARCA -->
+  <!-- CABEÇALHO -->
   <header>
     <div class="brand-container">
       <div class="brand-logo-mark">R</div>
@@ -380,9 +319,9 @@
   </header>
 
   <div class="main-wrapper">
-    <!-- BOTÃO FLUTUANTE PARA CELULAR -->
+    <!-- BOTÃO FLUTUANTE DE MENU NO CELULAR -->
     <button class="mobile-menu-btn" onclick="toggleSidebar()">
-      <span>☰</span> <span>Ferramentas</span>
+      <span>☰</span> <span>Adicionar Módulos</span>
     </button>
 
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
@@ -391,15 +330,16 @@
     <sidebar id="sidebar">
       <div class="section-title" style="display: flex; justify-content: space-between; align-items: center;">
         <span>Adicionar Módulos</span>
-        <span style="cursor: pointer; font-size: 1.1rem;" onclick="toggleSidebar()">✕</span>
-      </div>
-      <div class="btn-group">
-        <button class="btn" onclick="createElement('cdl'); closeSidebarOnMobile();">🟦 Nova CDL</button>
-        <button class="btn" onclick="createElement('mesa'); closeSidebarOnMobile();">🟩 Nova Mesa</button>
-        <button class="btn" onclick="createElement('corredor'); closeSidebarOnMobile();">🟨 Novo Corredor Operacional</button>
+        <span style="cursor: pointer; font-size: 1.2rem; padding: 4px;" onclick="toggleSidebar()">✕</span>
       </div>
 
-      <div class="section-title" style="margin-top: 6px;">Editar Elemento Selecionado</div>
+      <div class="btn-group">
+        <button class="btn" onclick="addModule('cdl')">🟦 Nova CDL</button>
+        <button class="btn" onclick="addModule('mesa')">🟩 Nova Mesa</button>
+        <button class="btn" onclick="addModule('corredor')">🟨 Novo Corredor Operacional</button>
+      </div>
+
+      <div class="section-title" style="margin-top: 10px;">Editar Elemento Selecionado</div>
       <div id="inspector" class="inspector" style="opacity: 0.5; pointer-events: none;">
         <div class="field-group">
           <label>Nome / Identificação:</label>
@@ -428,7 +368,7 @@
           </div>
         </div>
 
-        <button class="btn btn-danger" style="margin-top: 4px;" onclick="deleteSelectedElement()">🗑️ Excluir Módulo</button>
+        <button class="btn btn-danger" style="margin-top: 6px;" onclick="deleteSelectedElement()">🗑️ Excluir Módulo</button>
       </div>
 
       <div class="section-title" style="margin-top: auto;">Opções Gerais</div>
@@ -436,7 +376,7 @@
       <button class="btn btn-primary" onclick="window.print()">🖨️ Imprimir Layout</button>
     </sidebar>
 
-    <!-- ÁREA DA PLANTA BAIXA (CANVAS) -->
+    <!-- CANVA DA PLANTA -->
     <div class="viewport" id="viewport">
       <div id="canvas" onclick="deselectAll(event)"></div>
     </div>
@@ -449,11 +389,13 @@
 
   <script>
     const canvas = document.getElementById('canvas');
+    const viewport = document.getElementById('viewport');
     let selectedElement = null;
     let isDragging = false;
     let dragStartX, dragStartY, elemStartX, elemStartY;
+    let spawnCounter = 0; // Contador para evitar sobreposição ao criar vários elementos
 
-    // CONTROLE DE MENU MOBILE
+    // MENU MOBILE
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
       const overlay = document.getElementById('sidebarOverlay');
@@ -463,27 +405,33 @@
 
     function closeSidebarOnMobile() {
       if (window.innerWidth <= 768) {
-        toggleSidebar();
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        sidebar.classList.remove('open');
+        overlay.classList.remove('open');
       }
     }
 
-    // LAYOUT PADRÃO INICIAL
-    function loadDefaultLayout() {
-      canvas.innerHTML = '';
+    // ADICIONAR MÓDULO COM POSICIONAMENTO INTELIGENTE
+    function addModule(type) {
+      spawnCounter = (spawnCounter + 1) % 8;
+      
+      // Calcula uma posição totalmente livre e visível no viewport atual
+      const scrollX = viewport ? viewport.scrollLeft : 0;
+      const scrollY = viewport ? viewport.scrollTop : 0;
 
-      const defaultData = [
-        { type: 'corredor', label: 'Corredor Operacional de Triagem', x: 40, y: 30, w: 720, h: 80, entry: 'none' },
-        { type: 'cdl', label: 'CDL 30', x: 40, y: 130, w: 90, h: 80, entry: 'bottom' },
-        { type: 'cdl', label: 'CDL 32', x: 40, y: 220, w: 90, h: 80, entry: 'bottom' },
-        { type: 'mesa', label: 'Mesa 01', x: 140, y: 220, w: 90, h: 80, entry: 'none' }
-      ];
+      const posX = Math.round((scrollX + 60 + (spawnCounter * 20)) / 10) * 10;
+      const posY = Math.round((scrollY + 320 + (spawnCounter * 20)) / 10) * 10;
 
-      defaultData.forEach(item => {
-        createElement(item.type, item.x, item.y, item.w, item.h, item.label, item.entry);
-      });
+      const w = type === 'corredor' ? 400 : 90;
+      const h = type === 'corredor' ? 70 : 80;
+
+      createElement(type, posX, posY, w, h, '', type === 'cdl' ? 'bottom' : 'none');
+      closeSidebarOnMobile();
     }
 
-    function createElement(type, x = 100, y = 100, w = 90, h = 80, label = '', entry = 'bottom') {
+    // CRIAÇÃO E RENDERIZAÇÃO DO ELEMENTO
+    function createElement(type, x, y, w = 90, h = 80, label = '', entry = 'bottom') {
       const el = document.createElement('div');
       el.className = `element type-${type}`;
       el.style.left = x + 'px';
@@ -492,12 +440,12 @@
       el.style.height = h + 'px';
 
       el.dataset.type = type;
-      el.dataset.label = label || (type === 'cdl' ? 'CDL Novo' : (type === 'mesa' ? 'Mesa' : 'Corredor Operacional de Triagem'));
+      el.dataset.label = label || (type === 'cdl' ? `CDL ${30 + document.querySelectorAll('.type-cdl').length}` : (type === 'mesa' ? `Mesa 0${document.querySelectorAll('.type-mesa').length + 1}` : 'Corredor Operacional de Triagem'));
       el.dataset.entry = entry;
 
       renderElementContent(el);
 
-      // USO DE POINTER EVENTS SUPORTA MOUSE E TOUCH (CELULAR) NATIVAMENTE
+      // EVENTO DE TOQUE/MOUSE UNIFICADO (POINTER EVENTS)
       el.addEventListener('pointerdown', startDrag);
       el.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -584,15 +532,16 @@
       }
     }
 
-    // SISTEMA DE ARRASTO MULTIDEVICE (MOUSE & TOUCH) USANDO POINTER EVENTS
+    // ARRASTO VIA POINTER EVENTS (TOUCH E MOUSE)
     function startDrag(e) {
-      if (e.button && e.button !== 0) return; // Apenas clique esquerdo / toque principal
+      if (e.button && e.button !== 0) return;
       isDragging = true;
       selectedElement = e.currentTarget;
       selectElement(selectedElement);
 
-      // Trava o ponteiro no elemento para garantir que o toque no celular não perca o foco
-      selectedElement.setPointerCapture(e.pointerId);
+      try {
+        selectedElement.setPointerCapture(e.pointerId);
+      } catch (err) {}
 
       dragStartX = e.clientX;
       dragStartY = e.clientY;
@@ -609,7 +558,6 @@
       const dx = e.clientX - dragStartX;
       const dy = e.clientY - dragStartY;
 
-      // Alinhamento na grade magnética de 10px
       let newX = Math.round((elemStartX + dx) / 10) * 10;
       let newY = Math.round((elemStartY + dy) / 10) * 10;
 
@@ -630,7 +578,24 @@
       selectedElement.onpointercancel = null;
     }
 
-    // Inicialização ao carregar a página
+    // LAYOUT PADRÃO INICIAL
+    function loadDefaultLayout() {
+      canvas.innerHTML = '';
+      spawnCounter = 0;
+
+      const defaultData = [
+        { type: 'corredor', label: 'Corredor Operacional de Triagem', x: 40, y: 30, w: 720, h: 80, entry: 'none' },
+        { type: 'cdl', label: 'CDL 30', x: 40, y: 130, w: 90, h: 80, entry: 'bottom' },
+        { type: 'cdl', label: 'CDL 32', x: 40, y: 220, w: 90, h: 80, entry: 'bottom' },
+        { type: 'mesa', label: 'Mesa 01', x: 140, y: 220, w: 90, h: 80, entry: 'none' }
+      ];
+
+      defaultData.forEach(item => {
+        createElement(item.type, item.x, item.y, item.w, item.h, item.label, item.entry);
+      });
+    }
+
+    // Inicializar
     loadDefaultLayout();
   </script>
 </body>
