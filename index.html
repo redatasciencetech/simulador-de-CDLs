@@ -2,8 +2,8 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simulador de CDLs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Simulador de CDLs - Rogério Estumano | Data Science & Tech</title>
   <style>
     :root {
       --header-bg: #000000;
@@ -27,39 +27,42 @@
       --grid-line: #e2e8f0;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
     body { display: flex; flex-direction: column; height: 100vh; background: #f8fafc; color: #0f172a; overflow: hidden; }
 
-    /* CABEÇALHO PERSONALIZADO */
+    /* CABEÇALHO RESPONSIVO */
     header {
       background: var(--header-bg);
       color: white;
-      padding: 10px 24px;
+      padding: 10px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      z-index: 10;
+      z-index: 20;
+      flex-wrap: wrap;
+      gap: 8px;
     }
 
     .brand-container {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .brand-logo-mark {
-      width: 38px;
-      height: 38px;
+      width: 34px;
+      height: 34px;
       border: 2px solid white;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 900;
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       color: white;
       position: relative;
       background: #000;
+      flex-shrink: 0;
     }
 
     .brand-logo-mark::after {
@@ -67,8 +70,8 @@
       position: absolute;
       bottom: 2px;
       right: 2px;
-      width: 10px;
-      height: 10px;
+      width: 8px;
+      height: 8px;
       background: var(--gold-light);
       border-radius: 50%;
     }
@@ -79,36 +82,32 @@
     }
 
     .brand-text .name {
-      font-size: 1.1rem;
+      font-size: 0.95rem;
       font-weight: 800;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
       color: #ffffff;
       line-height: 1;
     }
 
-    .brand-text .name .gold {
-      color: var(--gold-light);
-    }
+    .brand-text .name .gold { color: var(--gold-light); }
 
     .brand-text .sub {
-      font-size: 0.72rem;
-      letter-spacing: 1.5px;
+      font-size: 0.65rem;
+      letter-spacing: 1px;
       color: #cbd5e1;
-      margin-top: 3px;
+      margin-top: 2px;
     }
 
-    .brand-text .sub .gold {
-      color: var(--gold-light);
-    }
+    .brand-text .sub .gold { color: var(--gold-light); }
 
     .project-info {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 10px;
     }
 
     .project-title {
-      font-size: 1rem;
+      font-size: 0.85rem;
       font-weight: 600;
       color: #f1f5f9;
     }
@@ -116,29 +115,60 @@
     .badge {
       background: var(--gold-light);
       color: #000;
-      padding: 4px 12px;
+      padding: 3px 8px;
       border-radius: 12px;
       font-weight: bold;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       letter-spacing: 0.5px;
+      white-space: nowrap;
     }
 
     /* ÁREA PRINCIPAL */
-    .main-wrapper { display: flex; flex: 1; overflow: hidden; }
+    .main-wrapper { display: flex; flex: 1; position: relative; overflow: hidden; }
 
-    /* PAINEL LATERAL DE EDIÇÃO */
+    /* BOTÃO FLUTUANTE DE MENU NO CELULAR */
+    .mobile-menu-btn {
+      display: none;
+      position: absolute;
+      bottom: 16px;
+      left: 16px;
+      z-index: 90;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 30px;
+      font-weight: bold;
+      font-size: 0.85rem;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+      cursor: pointer;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* PAINEL LATERAL (DESKTOP & MOBILE DRAWER) */
     sidebar {
-      width: 310px;
+      width: 300px;
       background: white;
       border-right: 1px solid #e2e8f0;
       padding: 16px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
       overflow-y: auto;
+      z-index: 80;
+      transition: transform 0.3s ease;
     }
 
-    .section-title { font-size: 0.8rem; font-weight: bold; color: #64748b; text-transform: uppercase; margin-bottom: 6px; }
+    .sidebar-overlay {
+      display: none;
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 75;
+    }
+
+    .section-title { font-size: 0.75rem; font-weight: bold; color: #64748b; text-transform: uppercase; margin-bottom: 4px; }
 
     .btn-group { display: flex; flex-direction: column; gap: 8px; }
 
@@ -171,12 +201,12 @@
 
     .field-row { display: flex; gap: 8px; }
     .field-group { display: flex; flex-direction: column; gap: 4px; flex: 1; }
-    .field-group label { font-size: 0.75rem; color: #475569; font-weight: bold; }
+    .field-group label { font-size: 0.72rem; color: #475569; font-weight: bold; }
     .field-group input, .field-group select {
-      padding: 6px;
+      padding: 8px;
       border: 1px solid #cbd5e1;
       border-radius: 4px;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       background: white;
     }
 
@@ -190,18 +220,21 @@
         linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
       background-size: 20px 20px;
       position: relative;
+      touch-action: pan-x pan-y;
     }
 
     #canvas {
-      width: 1800px;
+      width: 1600px;
       height: 1200px;
       position: relative;
     }
 
-    /* ESTILOS DOS ELEMENTOS */
+    /* ESTILOS DOS ELEMENTOS COM TOUCH-ACTION NONE PARA ARRASTO PERFEITO */
     .element {
       position: absolute;
       user-select: none;
+      -webkit-user-select: none;
+      touch-action: none; /* Impede rolagem da tela durante o arrasto */
       cursor: move;
       box-sizing: border-box;
       display: flex;
@@ -226,13 +259,13 @@
       border-radius: 12px;
     }
     .type-cdl .title {
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 800;
       color: #000000;
       line-height: 1.1;
     }
     .type-cdl .sub {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: #64748b;
       font-family: 'Courier New', Courier, monospace;
       margin-top: 2px;
@@ -244,7 +277,7 @@
       border: 2px solid var(--mesa-border);
       color: var(--mesa-text);
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
     }
 
     /* TIPO CORREDOR OPERACIONAL */
@@ -252,7 +285,7 @@
       background: var(--corredor-bg);
       border: 2px dashed var(--corredor-border);
       color: var(--corredor-text);
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 500;
       letter-spacing: 0.5px;
       z-index: 1;
@@ -282,30 +315,47 @@
       width: 6px; height: 28px; border-radius: 2px;
     }
 
-    /* RODAPÉ PERSONALIZADO */
+    /* RODAPÉ RESPONSIVO */
     footer {
       background: #f8fafc;
       border-top: 1px solid #e2e8f0;
-      padding: 10px 20px;
+      padding: 8px 16px;
       text-align: center;
-      font-size: 0.85rem;
-      letter-spacing: 1px;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
       color: #475569;
       font-weight: 500;
+      z-index: 20;
     }
 
-    footer .author {
-      color: #0f172a;
-      font-weight: 700;
-    }
+    footer .author { color: #0f172a; font-weight: 700; }
+    footer .gold-text { color: var(--gold); font-weight: 800; }
 
-    footer .gold-text {
-      color: var(--gold);
-      font-weight: 800;
+    /* REGRAS CSS EXCLUSIVAS PARA TELAS MENORES (CELULARES) */
+    @media (max-width: 768px) {
+      .mobile-menu-btn { display: flex; }
+
+      sidebar {
+        position: absolute;
+        top: 0; left: 0; bottom: 0;
+        width: 280px;
+        transform: translateX(-100%);
+        box-shadow: 4px 0 20px rgba(0,0,0,0.25);
+      }
+
+      sidebar.open {
+        transform: translateX(0);
+      }
+
+      .sidebar-overlay.open {
+        display: block;
+      }
+
+      .project-title { display: none; } /* Esconde texto secundário no topo do celular */
     }
 
     @media print {
-      sidebar { display: none; }
+      sidebar, .mobile-menu-btn, .sidebar-overlay { display: none !important; }
       header, footer { display: flex !important; }
       .viewport { overflow: visible; background: none; }
     }
@@ -330,16 +380,26 @@
   </header>
 
   <div class="main-wrapper">
+    <!-- BOTÃO FLUTUANTE PARA CELULAR -->
+    <button class="mobile-menu-btn" onclick="toggleSidebar()">
+      <span>☰</span> <span>Ferramentas</span>
+    </button>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
     <!-- PAINEL LATERAL DE FERRAMENTAS -->
-    <sidebar>
-      <div class="section-title">Adicionar Módulos</div>
+    <sidebar id="sidebar">
+      <div class="section-title" style="display: flex; justify-content: space-between; align-items: center;">
+        <span>Adicionar Módulos</span>
+        <span style="cursor: pointer; font-size: 1.1rem;" onclick="toggleSidebar()">✕</span>
+      </div>
       <div class="btn-group">
-        <button class="btn" onclick="createElement('cdl')">🟦 Nova CDL</button>
-        <button class="btn" onclick="createElement('mesa')">🟩 Nova Mesa</button>
-        <button class="btn" onclick="createElement('corredor')">🟨 Novo Corredor Operacional</button>
+        <button class="btn" onclick="createElement('cdl'); closeSidebarOnMobile();">🟦 Nova CDL</button>
+        <button class="btn" onclick="createElement('mesa'); closeSidebarOnMobile();">🟩 Nova Mesa</button>
+        <button class="btn" onclick="createElement('corredor'); closeSidebarOnMobile();">🟨 Novo Corredor Operacional</button>
       </div>
 
-      <div class="section-title" style="margin-top: 10px;">Editar Elemento Selecionado</div>
+      <div class="section-title" style="margin-top: 6px;">Editar Elemento Selecionado</div>
       <div id="inspector" class="inspector" style="opacity: 0.5; pointer-events: none;">
         <div class="field-group">
           <label>Nome / Identificação:</label>
@@ -368,16 +428,16 @@
           </div>
         </div>
 
-        <button class="btn btn-danger" style="margin-top: 6px;" onclick="deleteSelectedElement()">🗑️ Excluir Módulo</button>
+        <button class="btn btn-danger" style="margin-top: 4px;" onclick="deleteSelectedElement()">🗑️ Excluir Módulo</button>
       </div>
 
       <div class="section-title" style="margin-top: auto;">Opções Gerais</div>
-      <button class="btn" onclick="loadDefaultLayout()">🔄 Restaurar Layout Padrão</button>
+      <button class="btn" onclick="loadDefaultLayout(); closeSidebarOnMobile();">🔄 Restaurar Layout Padrão</button>
       <button class="btn btn-primary" onclick="window.print()">🖨️ Imprimir Layout</button>
     </sidebar>
 
     <!-- ÁREA DA PLANTA BAIXA (CANVAS) -->
-    <div class="viewport">
+    <div class="viewport" id="viewport">
       <div id="canvas" onclick="deselectAll(event)"></div>
     </div>
   </div>
@@ -392,6 +452,20 @@
     let selectedElement = null;
     let isDragging = false;
     let dragStartX, dragStartY, elemStartX, elemStartY;
+
+    // CONTROLE DE MENU MOBILE
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('open');
+    }
+
+    function closeSidebarOnMobile() {
+      if (window.innerWidth <= 768) {
+        toggleSidebar();
+      }
+    }
 
     // LAYOUT PADRÃO INICIAL
     function loadDefaultLayout() {
@@ -423,7 +497,8 @@
 
       renderElementContent(el);
 
-      el.addEventListener('mousedown', startDrag);
+      // USO DE POINTER EVENTS SUPORTA MOUSE E TOUCH (CELULAR) NATIVAMENTE
+      el.addEventListener('pointerdown', startDrag);
       el.addEventListener('click', (e) => {
         e.stopPropagation();
         selectElement(el);
@@ -509,20 +584,24 @@
       }
     }
 
-    // ARRASTO DE ELEMENTOS COM ALINHAMENTO MAGNÉTICO NA GRADE
+    // SISTEMA DE ARRASTO MULTIDEVICE (MOUSE & TOUCH) USANDO POINTER EVENTS
     function startDrag(e) {
-      if (e.button !== 0) return;
+      if (e.button && e.button !== 0) return; // Apenas clique esquerdo / toque principal
       isDragging = true;
       selectedElement = e.currentTarget;
       selectElement(selectedElement);
+
+      // Trava o ponteiro no elemento para garantir que o toque no celular não perca o foco
+      selectedElement.setPointerCapture(e.pointerId);
 
       dragStartX = e.clientX;
       dragStartY = e.clientY;
       elemStartX = parseInt(selectedElement.style.left) || 0;
       elemStartY = parseInt(selectedElement.style.top) || 0;
 
-      window.addEventListener('mousemove', doDrag);
-      window.addEventListener('mouseup', stopDrag);
+      selectedElement.onpointermove = doDrag;
+      selectedElement.onpointerup = stopDrag;
+      selectedElement.onpointercancel = stopDrag;
     }
 
     function doDrag(e) {
@@ -530,6 +609,7 @@
       const dx = e.clientX - dragStartX;
       const dy = e.clientY - dragStartY;
 
+      // Alinhamento na grade magnética de 10px
       let newX = Math.round((elemStartX + dx) / 10) * 10;
       let newY = Math.round((elemStartY + dy) / 10) * 10;
 
@@ -537,10 +617,17 @@
       selectedElement.style.top = `${Math.max(0, newY)}px`;
     }
 
-    function stopDrag() {
+    function stopDrag(e) {
+      if (!isDragging || !selectedElement) return;
       isDragging = false;
-      window.removeEventListener('mousemove', doDrag);
-      window.removeEventListener('mouseup', stopDrag);
+
+      try {
+        selectedElement.releasePointerCapture(e.pointerId);
+      } catch (err) {}
+
+      selectedElement.onpointermove = null;
+      selectedElement.onpointerup = null;
+      selectedElement.onpointercancel = null;
     }
 
     // Inicialização ao carregar a página
