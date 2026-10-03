@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulador de CDLs</title>
+  <style>
+    :root {
+      --header-bg: #000000;
+      --gold: #d97706;
+      --gold-light: #eab308;
+      --primary: #004080;
+      
+      /* Estilos visuais das CDLs e Mesas */
+      --cdl-bg: #e0f2fe;
+      --cdl-border: #3b82f6;
+      --cdl-notch: #2563eb;
+
+      --mesa-bg: #dcfce7;
+      --mesa-border: #22c55e;
+      --mesa-text: #14532d;
+
+      --corredor-bg: #f5edd6;
+      --corredor-border: #b59a68;
+      --corredor-text: #292524;
+
+      --grid-line: #e2e8f0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+    body { display: flex; flex-direction: column; height: 100vh; background: #f8fafc; color: #0f172a; overflow: hidden; }
+
+    /* CABEÇALHO PERSONALIZADO */
+    header {
+      background: var(--header-bg);
+      color: white;
+      padding: 10px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      z-index: 10;
+    }
+
+    .brand-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo-mark {
+      width: 38px;
+      height: 38px;
+      border: 2px solid white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.4rem;
+      color: white;
+      position: relative;
+      background: #000;
+    }
+
+    .brand-logo-mark::after {
+      content: '';
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 10px;
+      height: 10px;
+      background: var(--gold-light);
+      border-radius: 50%;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-text .name {
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #ffffff;
+      line-height: 1;
+    }
+
+    .brand-text .name .gold {
+      color: var(--gold-light);
+    }
+
+    .brand-text .sub {
+      font-size: 0.72rem;
+      letter-spacing: 1.5px;
+      color: #cbd5e1;
+      margin-top: 3px;
+    }
+
+    .brand-text .sub .gold {
+      color: var(--gold-light);
+    }
+
+    .project-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .project-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+
+    .badge {
+      background: var(--gold-light);
+      color: #000;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* ÁREA PRINCIPAL */
+    .main-wrapper { display: flex; flex: 1; overflow: hidden; }
+
+    /* PAINEL LATERAL DE EDIÇÃO */
+    sidebar {
+      width: 310px;
+      background: white;
+      border-right: 1px solid #e2e8f0;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow-y: auto;
+    }
+
+    .section-title { font-size: 0.8rem; font-weight: bold; color: #64748b; text-transform: uppercase; margin-bottom: 6px; }
+
+    .btn-group { display: flex; flex-direction: column; gap: 8px; }
+
+    .btn {
+      padding: 10px;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      text-align: left;
+    }
+    .btn:hover { background: #e2e8f0; }
+    .btn-primary { background: var(--primary); color: white; border: none; text-align: center; }
+    .btn-primary:hover { background: #003366; }
+    .btn-danger { background: #ef4444; color: white; border: none; text-align: center; }
+
+    /* INSPETOR DE ELEMENTO SELECIONADO */
+    .inspector {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .field-row { display: flex; gap: 8px; }
+    .field-group { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+    .field-group label { font-size: 0.75rem; color: #475569; font-weight: bold; }
+    .field-group input, .field-group select {
+      padding: 6px;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      background: white;
+    }
+
+    /* ÁREA DO CANVAS DA PLANTA */
+    .viewport {
+      flex: 1;
+      overflow: auto;
+      background-color: #ffffff;
+      background-image: 
+        linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+      background-size: 20px 20px;
+      position: relative;
+    }
+
+    #canvas {
+      width: 1800px;
+      height: 1200px;
+      position: relative;
+    }
+
+    /* ESTILOS DOS ELEMENTOS */
+    .element {
+      position: absolute;
+      user-select: none;
+      cursor: move;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      border-radius: 8px;
+      transition: box-shadow 0.15s, border-color 0.15s;
+    }
+
+    .element.selected {
+      outline: 2px solid #2563eb !important;
+      box-shadow: 0 0 12px rgba(37, 99, 235, 0.4);
+      z-index: 50 !important;
+    }
+
+    /* TIPO CDL */
+    .type-cdl {
+      background: var(--cdl-bg);
+      border: 2px solid var(--cdl-border);
+      border-radius: 12px;
+    }
+    .type-cdl .title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #000000;
+      line-height: 1.1;
+    }
+    .type-cdl .sub {
+      font-size: 0.8rem;
+      color: #64748b;
+      font-family: 'Courier New', Courier, monospace;
+      margin-top: 2px;
+    }
+
+    /* TIPO MESA */
+    .type-mesa {
+      background: var(--mesa-bg);
+      border: 2px solid var(--mesa-border);
+      color: var(--mesa-text);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    /* TIPO CORREDOR OPERACIONAL */
+    .type-corredor {
+      background: var(--corredor-bg);
+      border: 2px dashed var(--corredor-border);
+      color: var(--corredor-text);
+      font-size: 1rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      z-index: 1;
+    }
+
+    /* LISTRA GROSSA DE ENTRADA DO PRODUTO */
+    .notch-bar {
+      position: absolute;
+      background: var(--cdl-notch);
+      z-index: 10;
+    }
+
+    .notch-bottom {
+      bottom: -4px; left: 50%; transform: translateX(-50%);
+      width: 28px; height: 6px; border-radius: 2px;
+    }
+    .notch-top {
+      top: -4px; left: 50%; transform: translateX(-50%);
+      width: 28px; height: 6px; border-radius: 2px;
+    }
+    .notch-left {
+      left: -4px; top: 50%; transform: translateY(-50%);
+      width: 6px; height: 28px; border-radius: 2px;
+    }
+    .notch-right {
+      right: -4px; top: 50%; transform: translateY(-50%);
+      width: 6px; height: 28px; border-radius: 2px;
+    }
+
+    /* RODAPÉ PERSONALIZADO */
+    footer {
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+      padding: 10px 20px;
+      text-align: center;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      color: #475569;
+      font-weight: 500;
+    }
+
+    footer .author {
+      color: #0f172a;
+      font-weight: 700;
+    }
+
+    footer .gold-text {
+      color: var(--gold);
+      font-weight: 800;
+    }
+
+    @media print {
+      sidebar { display: none; }
+      header, footer { display: flex !important; }
+      .viewport { overflow: visible; background: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CABEÇALHO COM A SUA MARCA -->
+  <header>
+    <div class="brand-container">
+      <div class="brand-logo-mark">R</div>
+      <div class="brand-text">
+        <div class="name">ROGÉRIO <span class="gold">ESTUMANO</span></div>
+        <div class="sub">Data Science | <span class="gold">Tech</span></div>
+      </div>
+    </div>
+    
+    <div class="project-info">
+      <div class="project-title">Simulador de Organização de CDLs</div>
+      <span class="badge">CORREIOS</span>
+    </div>
+  </header>
+
+  <div class="main-wrapper">
+    <!-- PAINEL LATERAL DE FERRAMENTAS -->
+    <sidebar>
+      <div class="section-title">Adicionar Módulos</div>
+      <div class="btn-group">
+        <button class="btn" onclick="createElement('cdl')">🟦 Nova CDL</button>
+        <button class="btn" onclick="createElement('mesa')">🟩 Nova Mesa</button>
+        <button class="btn" onclick="createElement('corredor')">🟨 Novo Corredor Operacional</button>
+      </div>
+
+      <div class="section-title" style="margin-top: 10px;">Editar Elemento Selecionado</div>
+      <div id="inspector" class="inspector" style="opacity: 0.5; pointer-events: none;">
+        <div class="field-group">
+          <label>Nome / Identificação:</label>
+          <input type="text" id="elemLabel" oninput="updateSelectedElement()">
+        </div>
+
+        <div class="field-group" id="groupEntrySide">
+          <label>Lado da Listra de Entrada:</label>
+          <select id="elemEntrySide" onchange="updateSelectedElement()">
+            <option value="bottom">Inferior (Baixo)</option>
+            <option value="top">Superior (Cima)</option>
+            <option value="left">Esquerda</option>
+            <option value="right">Direita</option>
+            <option value="none">Sem Listra (Fechado)</option>
+          </select>
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label>Largura (px):</label>
+            <input type="number" id="elemWidth" step="10" min="40" oninput="updateSelectedElement()">
+          </div>
+          <div class="field-group">
+            <label>Altura (px):</label>
+            <input type="number" id="elemHeight" step="10" min="30" oninput="updateSelectedElement()">
+          </div>
+        </div>
+
+        <button class="btn btn-danger" style="margin-top: 6px;" onclick="deleteSelectedElement()">🗑️ Excluir Módulo</button>
+      </div>
+
+      <div class="section-title" style="margin-top: auto;">Opções Gerais</div>
+      <button class="btn" onclick="loadDefaultLayout()">🔄 Restaurar Layout Padrão</button>
+      <button class="btn btn-primary" onclick="window.print()">🖨️ Imprimir Layout</button>
+    </sidebar>
+
+    <!-- ÁREA DA PLANTA BAIXA (CANVAS) -->
+    <div class="viewport">
+      <div id="canvas" onclick="deselectAll(event)"></div>
+    </div>
+  </div>
+
+  <!-- RODAPÉ DE ASSINATURA -->
+  <footer>
+    <span class="author">ROGÉRIO ESTUMANO</span> | <span class="gold-text">DATA SCIENCE & TECH</span> &copy; 2026
+  </footer>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    let selectedElement = null;
+    let isDragging = false;
+    let dragStartX, dragStartY, elemStartX, elemStartY;
+
+    // LAYOUT PADRÃO INICIAL
+    function loadDefaultLayout() {
+      canvas.innerHTML = '';
+
+      const defaultData = [
+        { type: 'corredor', label: 'Corredor Operacional de Triagem', x: 40, y: 30, w: 720, h: 80, entry: 'none' },
+        { type: 'cdl', label: 'CDL 30', x: 40, y: 130, w: 90, h: 80, entry: 'bottom' },
+        { type: 'cdl', label: 'CDL 32', x: 40, y: 220, w: 90, h: 80, entry: 'bottom' },
+        { type: 'mesa', label: 'Mesa 01', x: 140, y: 220, w: 90, h: 80, entry: 'none' }
+      ];
+
+      defaultData.forEach(item => {
+        createElement(item.type, item.x, item.y, item.w, item.h, item.label, item.entry);
+      });
+    }
+
+    function createElement(type, x = 100, y = 100, w = 90, h = 80, label = '', entry = 'bottom') {
+      const el = document.createElement('div');
+      el.className = `element type-${type}`;
+      el.style.left = x + 'px';
+      el.style.top = y + 'px';
+      el.style.width = w + 'px';
+      el.style.height = h + 'px';
+
+      el.dataset.type = type;
+      el.dataset.label = label || (type === 'cdl' ? 'CDL Novo' : (type === 'mesa' ? 'Mesa' : 'Corredor Operacional de Triagem'));
+      el.dataset.entry = entry;
+
+      renderElementContent(el);
+
+      el.addEventListener('mousedown', startDrag);
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        selectElement(el);
+      });
+
+      canvas.appendChild(el);
+      selectElement(el);
+    }
+
+    function renderElementContent(el) {
+      const type = el.dataset.type;
+      const label = el.dataset.label;
+      const entry = el.dataset.entry || 'none';
+
+      if (type === 'cdl') {
+        el.innerHTML = `
+          <div class="title">${label}</div>
+          <div class="sub">Distrito</div>
+        `;
+
+        if (entry !== 'none') {
+          const notch = document.createElement('div');
+          notch.className = `notch-bar notch-${entry}`;
+          el.appendChild(notch);
+        }
+      } else {
+        el.innerHTML = `<span>${label}</span>`;
+      }
+    }
+
+    function selectElement(el) {
+      if (selectedElement) selectedElement.classList.remove('selected');
+      selectedElement = el;
+      selectedElement.classList.add('selected');
+
+      const inspector = document.getElementById('inspector');
+      inspector.style.opacity = '1';
+      inspector.style.pointerEvents = 'auto';
+
+      document.getElementById('elemLabel').value = el.dataset.label;
+      document.getElementById('elemWidth').value = parseInt(el.style.width);
+      document.getElementById('elemHeight').value = parseInt(el.style.height);
+
+      const entryGroup = document.getElementById('groupEntrySide');
+      if (el.dataset.type === 'cdl') {
+        entryGroup.style.display = 'flex';
+        document.getElementById('elemEntrySide').value = el.dataset.entry || 'bottom';
+      } else {
+        entryGroup.style.display = 'none';
+      }
+    }
+
+    function deselectAll(e) {
+      if (e.target === canvas) {
+        if (selectedElement) selectedElement.classList.remove('selected');
+        selectedElement = null;
+        const inspector = document.getElementById('inspector');
+        inspector.style.opacity = '0.5';
+        inspector.style.pointerEvents = 'none';
+      }
+    }
+
+    function updateSelectedElement() {
+      if (!selectedElement) return;
+
+      const label = document.getElementById('elemLabel').value;
+      const w = document.getElementById('elemWidth').value;
+      const h = document.getElementById('elemHeight').value;
+      const entry = document.getElementById('elemEntrySide').value;
+
+      selectedElement.dataset.label = label;
+      selectedElement.dataset.entry = entry;
+      selectedElement.style.width = w + 'px';
+      selectedElement.style.height = h + 'px';
+
+      renderElementContent(selectedElement);
+    }
+
+    function deleteSelectedElement() {
+      if (selectedElement) {
+        selectedElement.remove();
+        deselectAll({ target: canvas });
+      }
+    }
+
+    // ARRASTO DE ELEMENTOS COM ALINHAMENTO MAGNÉTICO NA GRADE
+    function startDrag(e) {
+      if (e.button !== 0) return;
+      isDragging = true;
+      selectedElement = e.currentTarget;
+      selectElement(selectedElement);
+
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+      elemStartX = parseInt(selectedElement.style.left) || 0;
+      elemStartY = parseInt(selectedElement.style.top) || 0;
+
+      window.addEventListener('mousemove', doDrag);
+      window.addEventListener('mouseup', stopDrag);
+    }
+
+    function doDrag(e) {
+      if (!isDragging || !selectedElement) return;
+      const dx = e.clientX - dragStartX;
+      const dy = e.clientY - dragStartY;
+
+      let newX = Math.round((elemStartX + dx) / 10) * 10;
+      let newY = Math.round((elemStartY + dy) / 10) * 10;
+
+      selectedElement.style.left = `${Math.max(0, newX)}px`;
+      selectedElement.style.top = `${Math.max(0, newY)}px`;
+    }
+
+    function stopDrag() {
+      isDragging = false;
+      window.removeEventListener('mousemove', doDrag);
+      window.removeEventListener('mouseup', stopDrag);
+    }
+
+    // Inicialização ao carregar a página
+    loadDefaultLayout();
+  </script>
+</body>
+</html>
