@@ -11,7 +11,7 @@
       --gold-light: #eab308;
       --primary: #004080;
       
-      /* Cores padrão dos módulos */
+      /* Cores padrão dos módulos na tela */
       --cdl-bg: #e0f2fe;
       --cdl-border: #3b82f6;
       --cdl-notch: #2563eb;
@@ -48,7 +48,6 @@
       gap: 10px;
     }
 
-    /* ESTILO DA LOGO EM IMAGEM */
     .brand-logo-img {
       height: 40px;
       width: auto;
@@ -76,7 +75,7 @@
     /* ÁREA PRINCIPAL */
     .main-wrapper { display: flex; flex: 1; position: relative; overflow: hidden; }
 
-    /* BOTÃO FLUTUANTE DE MENU */
+    /* BOTÃO FLUTUANTE DE MENU MOBILE */
     .mobile-menu-btn {
       display: none;
       position: absolute;
@@ -130,7 +129,6 @@
       margin-bottom: 4px;
     }
 
-    /* BOTÃO FECHAR "✕" */
     .close-btn {
       background: none;
       border: none;
@@ -214,7 +212,6 @@
       cursor: pointer;
     }
 
-    /* BOTÕES DE ATALHO RÁPIDO PARA O SUBTÍTULO */
     .preset-pills {
       display: flex;
       gap: 4px;
@@ -264,12 +261,38 @@
     }
 
     #canvas {
-      width: 1800px;
-      height: 1200px;
+      width: 2400px;
+      height: 1400px;
       position: relative;
     }
 
-    /* ESTILOS DOS ELEMENTOS COM COR HERDADA */
+    /* BARRA FLUTUANTE DE CONTADOR DE CDLS NA ÁREA DE TRABALHO */
+    .stats-bar {
+      position: sticky;
+      top: 12px;
+      margin-left: auto;
+      margin-right: 16px;
+      width: fit-content;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(4px);
+      border: 1px solid #cbd5e1;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      z-index: 60;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #334155;
+      pointer-events: none;
+    }
+
+    .stats-bar span.active-val { color: #16a34a; font-weight: 800; font-size: 0.95rem; }
+    .stats-bar span.inactive-val { color: #dc2626; font-weight: 800; font-size: 0.95rem; }
+    .stats-bar span.total-val { color: #2563eb; font-weight: 800; font-size: 0.95rem; }
+
+    /* ESTILOS DOS ELEMENTOS */
     .element {
       position: absolute;
       user-select: none;
@@ -286,13 +309,33 @@
       padding: 6px 8px;
       overflow: hidden;
       color: #0f172a;
-      transition: box-shadow 0.15s, border-color 0.15s;
+      transition: opacity 0.2s, filter 0.2s, box-shadow 0.15s, border-color 0.15s;
     }
 
     .element.selected {
       outline: 3px solid #2563eb !important;
       box-shadow: 0 0 14px rgba(37, 99, 235, 0.5);
       z-index: 50 !important;
+    }
+
+    /* ESTADO INATIVO */
+    .element.inactive {
+      opacity: 0.45 !important;
+      filter: grayscale(80%) !important;
+      border-style: dashed !important;
+    }
+
+    .element.inactive::after {
+      content: "INATIVO";
+      position: absolute;
+      top: 2px;
+      right: 4px;
+      font-size: 0.55rem;
+      font-weight: bold;
+      background: #ef4444;
+      color: white;
+      padding: 1px 4px;
+      border-radius: 4px;
     }
 
     /* TIPO CDL */
@@ -333,12 +376,6 @@
       padding: 4px;
     }
 
-    .type-mesa span {
-      width: 100%;
-      overflow-wrap: break-word;
-      word-break: break-word;
-    }
-
     /* TIPO CORREDOR */
     .type-corredor {
       background: var(--corredor-bg);
@@ -351,13 +388,6 @@
       padding: 4px;
     }
 
-    .type-corredor span {
-      width: 100%;
-      overflow-wrap: break-word;
-      word-break: break-word;
-    }
-
-    /* LISTRA GROSSA DE ENTRADA */
     .notch-bar { position: absolute; background: var(--cdl-notch); z-index: 10; }
     .notch-bottom { bottom: -4px; left: 50%; transform: translateX(-50%); width: 28px; height: 6px; border-radius: 2px; }
     .notch-top { top: -4px; left: 50%; transform: translateX(-50%); width: 28px; height: 6px; border-radius: 2px; }
@@ -379,7 +409,6 @@
     footer .author { color: #0f172a; font-weight: 700; }
     footer .gold-text { color: var(--gold); font-weight: 800; }
 
-    /* REGRAS PARA TELEMÓVEL / CELULAR */
     @media (max-width: 768px) {
       .mobile-menu-btn { display: flex; }
 
@@ -398,10 +427,81 @@
       .project-title { display: none; }
     }
 
+    /* REGRAS DE IMPRESSÃO ECONÔMICA (PRETO & BRANCO - ALTO CONTRASTE) */
     @media print {
-      sidebar, .mobile-menu-btn, .sidebar-overlay { display: none !important; }
-      header, footer { display: flex !important; }
-      .viewport { overflow: visible; background: none; }
+      sidebar, .mobile-menu-btn, .sidebar-overlay, .stats-bar { display: none !important; }
+
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+
+      header {
+        background: #ffffff !important;
+        color: #000000 !important;
+        border-bottom: 2px solid #000000 !important;
+        box-shadow: none !important;
+        padding: 8px 0 !important;
+      }
+
+      .brand-logo-img {
+        filter: grayscale(100%);
+        border: 1px solid #000000;
+      }
+
+      .project-title {
+        color: #000000 !important;
+      }
+
+      .badge {
+        background: #ffffff !important;
+        color: #000000 !important;
+        border: 1px solid #000000 !important;
+      }
+
+      .viewport {
+        overflow: visible !important;
+        background: none !important;
+      }
+
+      #canvas {
+        background: #ffffff !important;
+      }
+
+      .element {
+        background: #ffffff !important;
+        color: #000000 !important;
+        box-shadow: none !important;
+      }
+
+      .type-cdl {
+        border: 1.5px solid #000000 !important;
+        border-radius: 8px !important;
+      }
+
+      .type-mesa {
+        border: 1.5px solid #000000 !important;
+        border-radius: 4px !important;
+      }
+
+      .type-corredor {
+        border: 1.5px dashed #000000 !important;
+        background: #ffffff !important;
+      }
+
+      .notch-bar {
+        background: #000000 !important;
+      }
+
+      footer {
+        background: #ffffff !important;
+        border-top: 1px solid #000000 !important;
+        color: #000000 !important;
+      }
+
+      footer .gold-text {
+        color: #000000 !important;
+      }
     }
   </style>
 </head>
@@ -448,20 +548,32 @@
         <label>Alternar Layout Salvo:</label>
         <select id="layoutSelect" onchange="switchLayout(this.value)"></select>
       </div>
+      
+      <div class="field-row" style="margin-top: 4px;">
+        <button class="btn btn-primary" style="padding: 6px 10px; font-size: 0.8rem; flex: 1; text-align: center;" onclick="renameCurrentLayout()">✏️ Renomear</button>
+        <button class="btn btn-danger" style="padding: 6px 10px; font-size: 0.78rem; text-align: center; flex: 1;" onclick="deleteCurrentLayout()">🗑 Excluir</button>
+      </div>
+
       <div class="field-row" style="margin-top: 4px;">
         <div class="field-group">
           <input type="text" id="newLayoutName" placeholder="Nome do novo layout...">
         </div>
-        <button class="btn btn-primary" style="padding: 6px 12px; font-size: 0.8rem; white-space: nowrap;" onclick="saveCurrentLayout()">💾 Salvar</button>
+        <button class="btn btn-primary" style="padding: 6px 12px; font-size: 0.8rem; white-space: nowrap;" onclick="saveCurrentLayout()">💾 Salvar Novo</button>
       </div>
-      <button class="btn btn-danger" style="padding: 6px 10px; font-size: 0.78rem; text-align: center;" onclick="deleteCurrentLayout()">🗑️ Excluir Modelo Ativo</button>
 
       <div class="section-title" style="margin-top: 10px;">Editar Elemento Selecionado</div>
       <div id="inspector" class="inspector" style="opacity: 0.5; pointer-events: none;">
         
-        <!-- AVISO DE MULTISSELEÇÃO -->
         <div id="multiSelectNotice" class="multi-select-notice" style="display: none;">
           <span id="multiSelectCount">0</span> Módulos Selecionados
+        </div>
+
+        <div class="field-group" id="groupStatus">
+          <label>Status na Contagem:</label>
+          <select id="elemStatus" onchange="updateSelectedElement()">
+            <option value="ativo">🟢 Ativo (Contar)</option>
+            <option value="inativo">🔴 Inativo (Ignorar)</option>
+          </select>
         </div>
 
         <div class="field-group" id="groupLabel">
@@ -469,7 +581,6 @@
           <input type="text" id="elemLabel" oninput="updateSelectedElement()">
         </div>
 
-        <!-- CAMPO DE SUBTÍTULO COM DATALIST E BOTOES DE ATALHO RÁPIDO -->
         <div class="field-group" id="groupSubLabel">
           <label>Subtítulo / Descrição:</label>
           <input type="text" id="elemSubLabel" list="sublabelPresets" placeholder="Ex: Manga Grande" oninput="updateSelectedElement()">
@@ -487,7 +598,6 @@
           </div>
         </div>
 
-        <!-- SELETORES DE COR (FUNDO E TEXTO) -->
         <div class="field-row" id="groupColors">
           <div class="field-group">
             <label>Cor do Fundo:</label>
@@ -531,6 +641,15 @@
 
     <!-- CANVA DA PLANTA -->
     <div class="viewport" id="viewport">
+      <!-- PAINEL DE CONTAGEM EM TEMPO REAL NA ÁREA DE TRABALHO -->
+      <div class="stats-bar" id="statsBar">
+        <span>📊 CDLs Ativas: <span class="active-val" id="countActiveCdl">0</span></span>
+        <span>|</span>
+        <span>Inativas: <span class="inactive-val" id="countInactiveCdl">0</span></span>
+        <span>|</span>
+        <span>Total: <span class="total-val" id="countTotalCdl">0</span></span>
+      </div>
+
       <div id="canvas" onclick="deselectAll(event)"></div>
     </div>
   </div>
@@ -549,25 +668,109 @@
     let elemStartPositions = [];
     let spawnCounter = 0;
 
-    const STORAGE_KEY = 'cdl_simulator_saved_layouts';
+    // CHAVE DE ARMAZENAMENTO DA VERSÃO V4 (MEDIDAS 90x80)
+    const STORAGE_KEY = 'cdl_simulator_saved_layouts_v4';
 
-    // MODELOS DE EXEMPLO INICIAIS
-    const DEFAULT_PRESETS = {
-      "Layout Padrão": [
-        { type: 'corredor', label: 'Corredor Operacional de Triagem', x: 40, y: 30, w: 720, h: 80, sublabel: '', entry: 'none', bgColor: '#f5edd6', textColor: '#292524' },
-        { type: 'cdl', label: 'CDL 128', x: 40, y: 130, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000000' },
-        { type: 'cdl', label: 'CDL 129', x: 140, y: 130, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000000' },
-        { type: 'mesa', label: 'Mesa 01', x: 240, y: 130, w: 90, h: 80, sublabel: '', entry: 'none', bgColor: '#dcfce7', textColor: '#14532d' }
-      ]
-    };
+    // GERADOR DO LAYOUT PADRÃO IDÊNTICO À FOTO COM LARGURA 90 E ALTURA 80
+    function getFullDefaultLayoutData() {
+      return [
+        { type: 'corredor', label: 'Coleta de Itens da Esteira', x: 40, y: 15, w: 2280, h: 35, sublabel: '', entry: 'none', bgColor: '#000000', textColor: '#ffffff' },
+        { type: 'corredor', label: 'Corredor Operacional de Triagem', x: 40, y: 55, w: 2280, h: 45, sublabel: '', entry: 'none', bgColor: '#f5edd6', textColor: '#292524' },
+        
+        // FILA SUPERIOR - LINHA 1 (w: 90, h: 80)
+        { type: 'cdl', label: 'CDL 154', x: 40, y: 110, w: 90, h: 80, sublabel: 'Manga Média', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 153', x: 135, y: 110, w: 90, h: 80, sublabel: 'Manga Média', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 152', x: 230, y: 110, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 151', x: 325, y: 110, w: 90, h: 80, sublabel: 'Manga Média', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 150', x: 420, y: 110, w: 90, h: 80, sublabel: 'Manga Média', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 149', x: 515, y: 110, w: 90, h: 80, sublabel: 'Manga Média', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 148', x: 610, y: 110, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 147', x: 705, y: 110, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 146', x: 800, y: 110, w: 90, h: 80, sublabel: 'Manga Média', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 145', x: 895, y: 110, w: 90, h: 80, sublabel: 'Manga Média', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 144', x: 990, y: 110, w: 90, h: 80, sublabel: 'Manga Média', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 143', x: 1085, y: 110, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 142', x: 1180, y: 110, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 141', x: 1275, y: 110, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 140', x: 1390, y: 110, w: 90, h: 80, sublabel: 'Manga Média', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 139', x: 1485, y: 110, w: 90, h: 80, sublabel: 'Manga Média', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 136', x: 1600, y: 110, w: 90, h: 80, sublabel: 'Manga Média', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 135', x: 1695, y: 110, w: 90, h: 80, sublabel: 'Manga Média', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 134', x: 1810, y: 110, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 133', x: 1905, y: 110, w: 90, h: 80, sublabel: 'Manga Média', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 131', x: 2010, y: 110, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'mesa', label: 'MESA', x: 2110, y: 110, w: 90, h: 80, sublabel: '', entry: 'none', bgColor: '#dcfce7', textColor: '#14532d' },
+        { type: 'cdl', label: 'CDL 128', x: 2210, y: 110, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+
+        // FILA SUPERIOR - LINHA 2
+        { type: 'cdl', label: 'CDL 138', x: 1485, y: 200, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'top', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 137', x: 1600, y: 200, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'top', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 135', x: 1695, y: 200, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'top', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 134', x: 1810, y: 200, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'top', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 132', x: 1905, y: 200, w: 90, h: 80, sublabel: 'Manga Pequena', entry: 'top', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 131', x: 2010, y: 200, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'top', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 130', x: 2110, y: 200, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'top', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 129', x: 2210, y: 200, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'top', bgColor: '#e0f2fe', textColor: '#000' },
+
+        { type: 'corredor', label: '30 CDLs', x: 2315, y: 150, w: 95, h: 70, sublabel: '', entry: 'none', bgColor: '#f5edd6', textColor: '#292524' },
+
+        // FILA INFERIOR - CORREDOR 2
+        { type: 'corredor', label: 'Corredor Operacional de Triagem', x: 40, y: 300, w: 2280, h: 45, sublabel: '', entry: 'none', bgColor: '#f5edd6', textColor: '#292524' },
+
+        // FILA INFERIOR - LINHA 1
+        { type: 'mesa', label: 'MESA', x: 40, y: 360, w: 90, h: 80, sublabel: '', entry: 'none', bgColor: '#dcfce7', textColor: '#14532d' },
+        { type: 'cdl', label: 'CDL 128', x: 140, y: 360, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'top', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 126', x: 280, y: 360, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'top', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 124', x: 420, y: 360, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'top', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 122', x: 560, y: 360, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'top', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 120', x: 700, y: 360, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'top', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 118', x: 840, y: 360, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'top', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 116', x: 980, y: 360, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'top', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 114', x: 1120, y: 360, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'top', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 112', x: 1260, y: 360, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'top', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 110', x: 1400, y: 360, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'top', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 108', x: 1540, y: 360, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'top', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 106', x: 1680, y: 360, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'top', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 104', x: 1820, y: 360, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'top', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 102', x: 1960, y: 360, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'top', bgColor: '#e0f2fe', textColor: '#000' },
+
+        // FILA INFERIOR - LINHA 2
+        { type: 'cdl', label: 'CDL 130', x: 40, y: 450, w: 90, h: 80, sublabel: 'Manga Pequena', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 129', x: 140, y: 450, w: 90, h: 80, sublabel: 'Manga Pequena', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 127', x: 235, y: 450, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 125', x: 375, y: 450, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 123', x: 515, y: 450, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 121', x: 655, y: 450, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 119', x: 795, y: 450, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 117', x: 935, y: 450, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 115', x: 1075, y: 450, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 113', x: 1215, y: 450, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 111', x: 1355, y: 450, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 109', x: 1495, y: 450, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 107', x: 1635, y: 450, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 105', x: 1775, y: 450, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 103', x: 1915, y: 450, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+        { type: 'cdl', label: 'CDL 101', x: 2015, y: 450, w: 90, h: 80, sublabel: 'Manga Grande', entry: 'bottom', bgColor: '#e0f2fe', textColor: '#000' },
+
+        { type: 'corredor', label: '27 CDLs', x: 2120, y: 400, w: 95, h: 70, sublabel: '', entry: 'none', bgColor: '#f5edd6', textColor: '#292524' }
+      ];
+    }
 
     function getSavedLayouts() {
+      const defaultLayoutData = getFullDefaultLayoutData();
       const stored = localStorage.getItem(STORAGE_KEY);
+      
       if (stored) {
-        try { return JSON.parse(stored); } catch(e) {}
+        try { 
+          const parsed = JSON.parse(stored);
+          parsed["Layout Padrão"] = defaultLayoutData;
+          return parsed;
+        } catch(e) {}
       }
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_PRESETS));
-      return DEFAULT_PRESETS;
+      
+      const initialStore = { "Layout Padrão": defaultLayoutData };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(initialStore));
+      return initialStore;
     }
 
     function saveLayoutsToStorage(layoutsObj) {
@@ -581,6 +784,7 @@
         label: el.dataset.label,
         sublabel: el.dataset.sublabel || '',
         entry: el.dataset.entry || 'none',
+        status: el.dataset.status || 'ativo',
         x: parseInt(el.style.left) || 0,
         y: parseInt(el.style.top) || 0,
         w: parseInt(el.style.width) || 90,
@@ -612,11 +816,30 @@
         spawnCounter = 0;
 
         layouts[layoutName].forEach(item => {
-          createElement(item.type, item.x, item.y, item.w, item.h, item.label, item.sublabel, item.entry, item.bgColor, item.textColor);
+          createElement(item.type, item.x, item.y, item.w, item.h, item.label, item.sublabel, item.entry, item.bgColor, item.textColor, item.status || 'ativo');
         });
 
         updateInspectorUI();
+        updateCdlCounters();
       }
+    }
+
+    function renameCurrentLayout() {
+      const select = document.getElementById('layoutSelect');
+      const currentName = select.value;
+
+      const newName = prompt(`Digite o novo nome para o layout "${currentName}":`, currentName);
+      if (!newName || newName.trim() === '' || newName === currentName) return;
+
+      const cleanName = newName.trim();
+      const layouts = getSavedLayouts();
+
+      layouts[cleanName] = layouts[currentName];
+      delete layouts[currentName];
+
+      saveLayoutsToStorage(layouts);
+      renderLayoutDropdown(cleanName);
+      alert(`Layout renomeado com sucesso para "${cleanName}"!`);
     }
 
     function saveCurrentLayout() {
@@ -661,13 +884,22 @@
 
     function restoreDefaultLayout() {
       const layouts = getSavedLayouts();
-      layouts["Layout Padrão"] = DEFAULT_PRESETS["Layout Padrão"];
+      layouts["Layout Padrão"] = getFullDefaultLayoutData();
       saveLayoutsToStorage(layouts);
       renderLayoutDropdown("Layout Padrão");
       switchLayout("Layout Padrão");
     }
 
-    // MENU TOGGLE
+    function updateCdlCounters() {
+      const cdls = Array.from(canvas.querySelectorAll('.type-cdl'));
+      const activeCount = cdls.filter(el => el.dataset.status !== 'inativo').length;
+      const inactiveCount = cdls.filter(el => el.dataset.status === 'inativo').length;
+
+      document.getElementById('countActiveCdl').innerText = activeCount;
+      document.getElementById('countInactiveCdl').innerText = inactiveCount;
+      document.getElementById('countTotalCdl').innerText = cdls.length;
+    }
+
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
       const overlay = document.getElementById('sidebarOverlay');
@@ -720,7 +952,7 @@
       updateSelectedElement();
     }
 
-    // ADICIONAR MÓDULO COM LEITURA DINÂMICA DA TELA
+    // ADICIONAR MÓDULO COM MEDIDAS PADRÃO W=90, H=80
     function addModule(type, mode = 'asc') {
       spawnCounter = (spawnCounter + 1) % 8;
       
@@ -736,7 +968,6 @@
       let customLabel = '';
 
       if (type === 'cdl') {
-        // Mapeia dinamicamente todos os números das CDLs visíveis na tela
         const activeCdls = Array.from(canvas.querySelectorAll('.type-cdl'))
           .map(el => {
             const match = el.dataset.label ? el.dataset.label.match(/\d+/) : null;
@@ -745,48 +976,27 @@
           .filter(num => num !== null);
 
         if (mode === 'asc') {
-          // Filtra números >= 128
           const ascNums = activeCdls.filter(num => num >= 128);
-          if (ascNums.length > 0) {
-            const maxNum = Math.max(...ascNums);
-            customLabel = `CDL ${maxNum + 1}`;
-          } else {
-            customLabel = `CDL 128`;
-          }
+          customLabel = `CDL ${ascNums.length > 0 ? Math.max(...ascNums) + 1 : 128}`;
         } else {
-          // Filtra números <= 127
           const descNums = activeCdls.filter(num => num <= 127);
-          if (descNums.length > 0) {
-            const minNum = Math.min(...descNums);
-            customLabel = `CDL ${minNum - 1}`;
-          } else {
-            customLabel = `CDL 127`;
-          }
+          customLabel = `CDL ${descNums.length > 0 ? Math.min(...descNums) - 1 : 127}`;
         }
       } else if (type === 'mesa') {
-        const activeMesas = Array.from(canvas.querySelectorAll('.type-mesa'))
-          .map(el => {
-            const match = el.dataset.label ? el.dataset.label.match(/\d+/) : null;
-            return match ? parseInt(match[0], 10) : null;
-          })
-          .filter(num => num !== null);
-        
-        const nextMesa = activeMesas.length > 0 ? Math.max(...activeMesas) + 1 : 1;
-        customLabel = `Mesa ${nextMesa < 10 ? '0' + nextMesa : nextMesa}`;
+        customLabel = 'MESA';
       } else {
         customLabel = 'Corredor Operacional de Triagem';
       }
 
       const defaultSublabel = type === 'cdl' ? 'Manga Grande' : '';
 
-      createElement(type, posX, posY, w, h, customLabel, defaultSublabel, type === 'cdl' ? 'bottom' : 'none', getDefaultHexColor(type), getDefaultTextColor(type));
+      createElement(type, posX, posY, w, h, customLabel, defaultSublabel, type === 'cdl' ? 'bottom' : 'none', getDefaultHexColor(type), getDefaultTextColor(type), 'ativo');
       closeSidebarOnMobile();
     }
 
-    // CRIAÇÃO DE ELEMENTO
-    function createElement(type, x, y, w = 90, h = 80, label = '', sublabel = 'Manga Grande', entry = 'bottom', bgColor = '', textColor = '') {
+    function createElement(type, x, y, w = 90, h = 80, label = '', sublabel = 'Manga Grande', entry = 'bottom', bgColor = '', textColor = '', status = 'ativo') {
       const el = document.createElement('div');
-      el.className = `element type-${type}`;
+      el.className = `element type-${type}${status === 'inativo' ? ' inactive' : ''}`;
       el.style.left = x + 'px';
       el.style.top = y + 'px';
       el.style.width = w + 'px';
@@ -802,6 +1012,7 @@
       el.dataset.label = label || (type === 'cdl' ? 'CDL 128' : 'Módulo');
       el.dataset.sublabel = sublabel;
       el.dataset.entry = entry;
+      el.dataset.status = status;
       el.dataset.bgColor = finalBgColor;
       el.dataset.textColor = finalTextColor;
 
@@ -815,6 +1026,7 @@
 
       canvas.appendChild(el);
       selectSingleElement(el);
+      updateCdlCounters();
     }
 
     function renderElementContent(el) {
@@ -882,6 +1094,7 @@
       const groupColors = document.getElementById('groupColors');
       const groupEntrySide = document.getElementById('groupEntrySide');
       const groupDimensions = document.getElementById('groupDimensions');
+      const groupStatus = document.getElementById('groupStatus');
       const btnDelete = document.getElementById('btnDeleteSelected');
 
       if (selectedElements.length === 0) {
@@ -898,8 +1111,10 @@
         groupLabel.style.display = 'flex';
         groupColors.style.display = 'flex';
         groupDimensions.style.display = 'flex';
+        groupStatus.style.display = 'flex';
         btnDelete.innerText = '🗑️ Excluir Módulo';
 
+        document.getElementById('elemStatus').value = el.dataset.status || 'ativo';
         document.getElementById('elemLabel').value = el.dataset.label;
         document.getElementById('elemWidth').value = parseInt(el.style.width);
         document.getElementById('elemHeight').value = parseInt(el.style.height);
@@ -926,6 +1141,7 @@
         groupSubLabel.style.display = 'none';
         groupEntrySide.style.display = 'none';
         groupDimensions.style.display = 'none';
+        groupStatus.style.display = 'flex';
         groupColors.style.display = 'flex';
 
         btnDelete.innerText = `🗑️ Excluir ${selectedElements.length} Módulos Selecionados`;
@@ -937,12 +1153,20 @@
 
       const bg = document.getElementById('elemBgColor').value;
       const txtColor = document.getElementById('elemTextColor').value;
+      const statusVal = document.getElementById('elemStatus').value;
 
       selectedElements.forEach(el => {
         el.dataset.bgColor = bg;
         el.style.backgroundColor = bg;
         el.dataset.textColor = txtColor;
         el.style.color = txtColor;
+
+        el.dataset.status = statusVal;
+        if (statusVal === 'inativo') {
+          el.classList.add('inactive');
+        } else {
+          el.classList.remove('inactive');
+        }
       });
 
       if (selectedElements.length === 1) {
@@ -961,6 +1185,8 @@
 
         renderElementContent(el);
       }
+
+      updateCdlCounters();
     }
 
     function deleteSelectedElements() {
@@ -968,6 +1194,7 @@
         selectedElements.forEach(el => el.remove());
         selectedElements = [];
         updateInspectorUI();
+        updateCdlCounters();
       }
     }
 
@@ -1026,11 +1253,10 @@
       targetEl.onpointercancel = null;
     }
 
-    // INICIALIZAÇÃO
+    // INICIALIZAÇÃO AUTOMÁTICA DO LAYOUT PADRÃO DA SUA FOTO (90x80)
     const layouts = getSavedLayouts();
-    const initialLayoutName = Object.keys(layouts)[0];
-    renderLayoutDropdown(initialLayoutName);
-    switchLayout(initialLayoutName);
+    renderLayoutDropdown("Layout Padrão");
+    switchLayout("Layout Padrão");
   </script>
 </body>
 </html>
